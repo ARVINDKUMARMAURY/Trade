@@ -7,14 +7,21 @@ import ccxt.async_support as ccxt
 from aiogram import Bot, Dispatcher
 from aiogram.filters import Command
 from aiogram.types import Message, FSInputFile
+from dotenv import load_dotenv  # <-- Naya addition
 
 # ================= 1. CONFIGURATION & SETUP =================
-# Railway/Heroku ke Environment Variables se keys fetch karna
-TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_TOKEN', 'YOUR_TELEGRAM_TOKEN')
-API_KEY = os.getenv('BINANCE_API', 'YOUR_BINANCE_API')
-SECRET_KEY = os.getenv('BINANCE_SECRET', 'YOUR_BINANCE_SECRET')
-# Aapko apne Telegram Chat ID ko string format mein pass karna hoga
-TELEGRAM_CHAT_ID = os.getenv('CHAT_ID', 'YOUR_CHAT_ID') 
+# .env file se keys load karna (Local testing ke liye)
+load_dotenv()  # <-- Yeh line .env file ko read karti hai
+
+# Ab direct environment variables se keys fetch hongi
+TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_TOKEN')
+API_KEY = os.getenv('BINANCE_API')
+SECRET_KEY = os.getenv('BINANCE_SECRET')
+TELEGRAM_CHAT_ID = os.getenv('CHAT_ID') 
+
+# Security check: Agar koi key miss ho gayi toh script yahi ruk jayegi
+if not TELEGRAM_BOT_TOKEN or not API_KEY or not SECRET_KEY:
+    raise ValueError("⚠️ Keys missing hain! Kripya apni .env file ya Railway variables check karein.")
 
 SYMBOL = 'BTC/USDT'
 TIMEFRAME = '1h'
@@ -192,4 +199,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-  
+    
